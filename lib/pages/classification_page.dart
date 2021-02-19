@@ -197,7 +197,7 @@ class _ClassificationPageState extends State<ClassificationPage> {
   }
 
   void _launchURL(String landmark) async {
-    var url = 'https://google.com/search?q=${landmark.replaceAll('_', ' ')}';
+      var url = "https://google.com/search?q=${landmark.replaceAll('_', ' ')}";
     url = Uri.encodeFull(url);
     if (await canLaunch(url)) {
       await launch(url);
