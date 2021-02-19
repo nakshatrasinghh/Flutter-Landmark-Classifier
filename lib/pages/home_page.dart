@@ -32,10 +32,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           'Select the Landmark Classifier', style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: Colors.white
+          color: Colors.white,
         ),
         ),
       ),
