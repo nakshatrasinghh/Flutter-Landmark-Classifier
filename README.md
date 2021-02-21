@@ -20,10 +20,15 @@ Complete working code for iOS emulators and Android physical devices/emulators i
 ## TfHub Models 👇
 
 * [Africa Landmark Model](https://tfhub.dev/google/on_device_vision/classifier/landmarks_classifier_africa_V1/1)
+
 * [Asia Landmark Model](https://tfhub.dev/google/on_device_vision/classifier/landmarks_classifier_asia_V1/1)
+
 * [Europe Landmark Model](https://tfhub.dev/google/on_device_vision/classifier/landmarks_classifier_europe_V1/1)
+
 * [North America Landmark Model](https://tfhub.dev/google/on_device_vision/classifier/landmarks_classifier_north_america_V1/1)
+
 * [Oceania Landmark Model](https://tfhub.dev/google/on_device_vision/classifier/landmarks_classifier_oceania_antarctica_V1/1)
+
 * [South America Landmark Model](https://tfhub.dev/google/on_device_vision/classifier/landmarks_classifier_south_america_V1/1)
 
 ## Pubspec Packages 👇
