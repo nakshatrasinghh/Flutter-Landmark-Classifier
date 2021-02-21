@@ -6,8 +6,10 @@ import 'package:landmark_classifier/services/image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ClassificationPage extends StatefulWidget {
+  // when the state is updated, everything in the build method will be initialized again.
+  // This includes all the variables with final
   final Landmark landmark;
-
+  // Constructor for landmark, made using bulb 😆
   const ClassificationPage({Key key, this.landmark}) : super(key: key);
 
   @override
@@ -24,6 +26,7 @@ class _ClassificationPageState extends State<ClassificationPage> {
   void initState() {
     super.initState();
     _classificationService = ClassificationService(
+      // refer to models/landmark.dart and constants/data.dart
       modelPath: widget.landmark.model,
       labelPath: widget.landmark.label,
     );
@@ -38,11 +41,11 @@ class _ClassificationPageState extends State<ClassificationPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Classification page code from here using important variables from above ☝️
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(0.5),
+        backgroundColor: Colors.pink.withOpacity(0.5),
         title: Text(widget.landmark.title, style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
@@ -159,7 +162,9 @@ class _ClassificationPageState extends State<ClassificationPage> {
               child: RawMaterialButton(
                 splashColor: Colors.redAccent,
                 onPressed: () async {
+                  // calls loadImage() from services/image.dart
                   var imageData = await _imageService.loadImage();
+                  // run classify function defined on line 193 of this page
                   var classification = classify(imageData);
                   setState(() {
                     userImage = imageData;
@@ -186,23 +191,30 @@ class _ClassificationPageState extends State<ClassificationPage> {
   }
 
   List<dynamic> classify(imageData) {
+    // if no data is passed, return none
     if (imageData == null) {
       return [];
     } else {
+      // imageData is picked from line 165 in this page
+      // if data is passed call runClassification function from
+      // services/classification.dart line 73
       return _classificationService.runClassification(
         imageData: imageData,
-        resultCount: 10,
       );
     }
   }
 
+  // Asynchronous function to launch urls to default browser of physical device/ emulators
   void _launchURL(String landmark) async {
       var url = "https://google.com/search?q=${landmark.replaceAll('_', ' ')}";
-    url = Uri.encodeFull(url);
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+      // encode the complete URL using url_launcher package
+      url = Uri.encodeFull(url);
+      // await for response and launch url
+      if (await canLaunch(url)) {
+        await launch(url);
+      // else throw error below
+      } else {
+        throw 'Could not launch $url';
+      }
   }
 }
