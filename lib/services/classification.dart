@@ -86,7 +86,7 @@ class ClassificationService {
     var outputResult = outputBuffer.getDoubleList();
     var length = min(outputResult.length, labels.length);
 
-    // Mapping
+    // Mapping buffer with labels
     for (var i = 0; i < length; i++) {
       var name = labels[i];
 
@@ -99,12 +99,13 @@ class ClassificationService {
       }
     }
 
-    // sort
+    // Sorting the keys in descending order wrt to confidence score
     var sortedKeys = map.keys.toList(growable:false)
       ..sort((k1, k2) => map[k2].compareTo(map[k1]));
 
     List<dynamic> result = [];
 
+    // Displaying top 7 predicted results only
     for (var i = 0; i < 7; i++) {
       result.add({
         'label': sortedKeys[i],

@@ -89,6 +89,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
+                          // push to classification_page.dart page
                           builder: (context) => ClassificationPage(
                             // Pushes json data from models/landmark.dart which
                             // inherits from constants/data.dart

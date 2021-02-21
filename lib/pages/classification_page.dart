@@ -8,6 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 class ClassificationPage extends StatefulWidget {
   // when the state is updated, everything in the build method will be initialized again.
   // This includes all the variables with final
+
+  // Landmark picked up from models/landmark.dart
   final Landmark landmark;
   // Constructor for landmark, made using bulb 😆
   const ClassificationPage({Key key, this.landmark}) : super(key: key);
@@ -25,6 +27,9 @@ class _ClassificationPageState extends State<ClassificationPage> {
   @override
   void initState() {
     super.initState();
+    // creating instance of ClassificationService class and passing parameters to
+    // the function inside it
+    // refer to services/classification.dart line 7
     _classificationService = ClassificationService(
       // refer to models/landmark.dart and constants/data.dart
       modelPath: widget.landmark.model,
@@ -51,14 +56,21 @@ class _ClassificationPageState extends State<ClassificationPage> {
           fontWeight: FontWeight.bold,
         ),),
       ),
+      // Classification page code starts from here 👇
       body: Stack(
         children: [
+          // Container for the classifier image on the background
+          // Background image container code from here 👇
           Container(
             alignment: Alignment.center,
+            // height and width of the background image container
             width: double.infinity,
             height: 480,
             decoration: BoxDecoration(
               image: DecorationImage(
+                // if image is not passed by user yet,
+                // use the landmark image defined in assets
+                // else use the image passed by the user.
                 image: userImage == null
                     ? AssetImage(widget.landmark.image)
                     : MemoryImage(userImage),
@@ -67,56 +79,74 @@ class _ClassificationPageState extends State<ClassificationPage> {
             ),
           ),
 
+          // Classified output container code from here 👇
           Container(
+            // taking maximum area available
             width: double.infinity,
             height: double.infinity,
+            // margin from top
             margin: const EdgeInsets.only(top: 340),
+            // padding the text inside the classifier output container, what is this landmark?
+            // No image selected.
             padding: const EdgeInsets.only(
-              top: 70,
+              top: 60,
               left: 30,
               right: 20,
             ),
+            // Changing classifier output container shape and color
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
+                topLeft: Radius.circular(40),
+                topRight: Radius.circular(40),
               ),
             ),
+            // Using singleChildScrollView to avoid overflow of pixel rendering and
+            // To view more than 7 predictions if needed by someone without any render errors
             child: SingleChildScrollView(
               child: Column(
+                // column's cross axis is left and right
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'What is this landmark?',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontSize: 26,
+                      color: Colors.black
                     ),
                   ),
+                  // Space between landmark text and no image selected
                   SizedBox(
                     height: 20,
                   ),
+                  // if user didn't pass the image yet, show 'no text selected' else
+                  // show predictions
                   userImage == null
                       ? Text(
                     'No image selected.',
                     style: TextStyle(
-                      color: Colors.grey,
+                      color: Colors.black54,
+                      fontSize: 15
                     ),
                   )
+                  // Predictions made if userImage != null
                       : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // result => dynamic list returned after running runClassification in
+                      // services/classification.dart in line 73
                       for (var i = 0; i < result.length; i++)
+                        // No of rows == no of predictions to make, i.e, 7
                         Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                // Left align predicted label
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  // starts from 0 index so i + 1
                                   Text('${i + 1}. ${result[i]['label']}', style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -125,21 +155,24 @@ class _ClassificationPageState extends State<ClassificationPage> {
                                   Text(
                                     '${result[i]['value']}',
                                     style: TextStyle(
-                                      color: Colors.pink,
-                                      fontSize: 16
+                                      color: Colors.pink[700],
+                                      fontSize: 18,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
+                            // Buttons next to each prediction to launch label search URl
+                            // using url launcher package and _launchURL function on line 240
                             RaisedButton(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                              color: Colors.black,
+                              color: Colors.pink[300],
                               onPressed: () {
+                                //function call line 240
                                 _launchURL(result[i]['label']);
                               },
                               child: Text('Search', style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold
                               ),),
                             )
@@ -152,15 +185,15 @@ class _ClassificationPageState extends State<ClassificationPage> {
             ),
           ),
 
-          // Camera, Gallery Button
+          // Camera and Gallery Button code from here 👇
           Container(
             margin: const EdgeInsets.only(top: 310),
             alignment: Alignment.topCenter,
             child: Container(
-              width: 70,
-              height: 70,
+              width: 80,
+              height: 80,
               child: RawMaterialButton(
-                splashColor: Colors.redAccent,
+                splashColor: Colors.pink,
                 onPressed: () async {
                   // calls loadImage() from services/image.dart
                   var imageData = await _imageService.loadImage();
@@ -171,16 +204,16 @@ class _ClassificationPageState extends State<ClassificationPage> {
                     result = classification;
                   });
                 },
+                // button elevation for UX
                 elevation: 5.0,
-                fillColor: Colors.white,
+                fillColor: Colors.black54,
                 child: Icon(
                   Icons.camera,
-                  size: 40.0,
-                  color: Colors.redAccent,
+                  size: 50.0,
+                  color: Colors.pinkAccent,
                 ),
-                padding: EdgeInsets.all(15.0),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
+                  borderRadius: BorderRadius.circular(40.0),
                 ),
               ),
             ),
@@ -190,6 +223,7 @@ class _ClassificationPageState extends State<ClassificationPage> {
     );
   }
 
+  // Function to runClassifier after user has passed image using image picker (gallery/photo)
   List<dynamic> classify(imageData) {
     // if no data is passed, return none
     if (imageData == null) {
